@@ -5,7 +5,7 @@ FIND_PACKAGE(OpenCL)
 message("OpenCL_LIBRARY: ${OpenCL_LIBRARY} \n")
 FIND_PACKAGE(OpenGL)
 FIND_PACKAGE(GLEW)
-FIND_PACKAGE(GLM)
+
 
 
 if(WIN32)
@@ -26,9 +26,15 @@ if(WIN32)
 	set(GLFW3_LIBRARY "${CMAKE_SOURCE_DIR}/../glfw-3.1.1.bin.WIN64/lib-vc2013/glfw3.lib")
 	message("GLFW3_LIBRARY: ${GLFW3_LIBRARY} \n")
 
+
+	set(GLM_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/../glm")
+	message("GLM_INCLUDE_PATH: ${GLM_INCLUDE_PATH} \n")
+
 else()
 
 	FIND_PACKAGE(glfw3)
+
+	FIND_PACKAGE(GLM)
 
 endif()
 
