@@ -4,27 +4,46 @@
 #define __CL_ENABLE_EXCEPTIONS
 #include "CL/cl.hpp"
 
+// It is NOT sufficiently tested, use with care! M.S., 2015/04/09
+#if defined(_MSC_VER)
+#define ALIGNED_(x) __declspec(align(x))
+#else
+//#if defined(__GNUC__)
+#define ALIGNED_(x) __attribute__ ((aligned(x)))
+//#endif
+#endif
+#define ALIGNED_TYPE_(t,x) typedef t ALIGNED_(x)
+
+
+
+
+
 // issue with using cl_float4 from cl_platform.h
 // http://www.khronos.org/message_boards/viewtopic.php?f=28&t=1848
 // typedef cl_float cl_float4 __attribute__ ((__vector_size__ (16), __may_alias__));
-typedef struct Vec4
+//typedef struct Vec4_noAlign
+struct Vec4_noAlign
 {
-    float x,y,z,w;
-    Vec4(){};
-    //convenience functions
-    Vec4(float xx, float yy, float zz, float ww):
-        x(xx),
-        y(yy),
-        z(zz),
-        w(ww)
-    {}
-    void set(float xx, float yy, float zz, float ww=1.) {
-        x = xx;
-        y = yy;
-        z = zz;
-        w = ww;
-    }
-} Vec4 __attribute__((aligned(16)));
+	float x, y, z, w;
+	Vec4_noAlign(){};
+	//convenience functions
+	Vec4_noAlign(float xx, float yy, float zz, float ww) :
+		x(xx),
+		y(yy),
+		z(zz),
+		w(ww)
+	{}
+	void set(float xx, float yy, float zz, float ww = 1.) {
+		x = xx;
+		y = yy;
+		z = zz;
+		w = ww;
+	}
+}; Vec4_noAlign; // __attribute__((aligned(16)));
+
+ALIGNED_TYPE_(Vec4_noAlign, 16) Vec4;
+
+
 
 class CL {
     public:
